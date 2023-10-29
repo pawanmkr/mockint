@@ -1,0 +1,61 @@
+type Query {
+  interview(id: ID!): Interview
+  allInterviews: [Interview]
+}
+
+type Mutation {
+  scheduleInterview(input: InterviewInput!): Interview!
+  updateInterview(id: ID!, input: InterviewInput!): Interview!
+  cancelInterview(id: ID!): DeleteResponse!
+  bookInterview(input: BookInterview!): Interview!
+}
+
+type TempUser {
+  name: String!
+  whatsapp: String!
+  note: String!
+}
+
+input TempUserInput {
+  name: String!
+  whatsapp: String!
+  note: String!
+}
+
+type Interview {
+  id: ID!
+  duration: Int!
+  time: String!
+  name: String!
+  skills: String!
+  difficulty: String!
+  guestType: String!
+  guest: [TempUser]!
+  note: String!
+  booked: Boolean!
+  joinUrl: String!
+  meetingCode: String!
+}
+
+input InterviewInput {
+  duration: Int!
+  time: String!
+  name: String!
+  skills: String!
+  difficulty: String!
+  guestType: String!
+  guest: [TempUserInput]!
+  note: String!
+  booked: Boolean!
+  joinUrl: String!
+  meetingCode: String!
+}
+
+type DeleteResponse {
+  deleteInterviewId: String!
+}
+
+input BookInterview {
+  interviewId: ID!
+  user: TempUserInput!
+}
