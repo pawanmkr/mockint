@@ -12,14 +12,12 @@ type Mutation {
 
 type TempUser {
   name: String!
-  whatsapp: String!
-  note: String!
+  email: String!
 }
 
 input TempUserInput {
   name: String!
-  whatsapp: String!
-  note: String!
+  email: String!
 }
 
 type Interview {
@@ -57,5 +55,6 @@ type DeleteResponse {
 
 input BookInterview {
   interviewId: ID!
-  user: TempUserInput!
+  name: String!
+  email: String!
 }

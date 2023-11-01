@@ -79,9 +79,8 @@ type ComplexityRoot struct {
 	}
 
 	TempUser struct {
-		Name     func(childComplexity int) int
-		Note     func(childComplexity int) int
-		Whatsapp func(childComplexity int) int
+		Email func(childComplexity int) int
+		Name  func(childComplexity int) int
 	}
 }
 
@@ -273,26 +272,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Interview(childComplexity, args["id"].(string)), true
 
+	case "TempUser.email":
+		if e.complexity.TempUser.Email == nil {
+			break
+		}
+
+		return e.complexity.TempUser.Email(childComplexity), true
+
 	case "TempUser.name":
 		if e.complexity.TempUser.Name == nil {
 			break
 		}
 
 		return e.complexity.TempUser.Name(childComplexity), true
-
-	case "TempUser.note":
-		if e.complexity.TempUser.Note == nil {
-			break
-		}
-
-		return e.complexity.TempUser.Note(childComplexity), true
-
-	case "TempUser.whatsapp":
-		if e.complexity.TempUser.Whatsapp == nil {
-			break
-		}
-
-		return e.complexity.TempUser.Whatsapp(childComplexity), true
 
 	}
 	return 0, false
@@ -951,10 +943,8 @@ func (ec *executionContext) fieldContext_Interview_guest(ctx context.Context, fi
 			switch field.Name {
 			case "name":
 				return ec.fieldContext_TempUser_name(ctx, field)
-			case "whatsapp":
-				return ec.fieldContext_TempUser_whatsapp(ctx, field)
-			case "note":
-				return ec.fieldContext_TempUser_note(ctx, field)
+			case "email":
+				return ec.fieldContext_TempUser_email(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TempUser", field.Name)
 		},
@@ -1758,8 +1748,8 @@ func (ec *executionContext) fieldContext_TempUser_name(ctx context.Context, fiel
 	return fc, nil
 }
 
-func (ec *executionContext) _TempUser_whatsapp(ctx context.Context, field graphql.CollectedField, obj *model.TempUser) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TempUser_whatsapp(ctx, field)
+func (ec *executionContext) _TempUser_email(ctx context.Context, field graphql.CollectedField, obj *model.TempUser) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TempUser_email(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1772,7 +1762,7 @@ func (ec *executionContext) _TempUser_whatsapp(ctx context.Context, field graphq
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Whatsapp, nil
+		return obj.Email, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1789,51 +1779,7 @@ func (ec *executionContext) _TempUser_whatsapp(ctx context.Context, field graphq
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TempUser_whatsapp(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "TempUser",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _TempUser_note(ctx context.Context, field graphql.CollectedField, obj *model.TempUser) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TempUser_note(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Note, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_TempUser_note(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TempUser_email(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "TempUser",
 		Field:      field,
@@ -3626,7 +3572,7 @@ func (ec *executionContext) unmarshalInputBookInterview(ctx context.Context, obj
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"interviewId", "user"}
+	fieldsInOrder := [...]string{"interviewId", "name", "email"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -3642,15 +3588,24 @@ func (ec *executionContext) unmarshalInputBookInterview(ctx context.Context, obj
 				return it, err
 			}
 			it.InterviewID = data
-		case "user":
+		case "name":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("user"))
-			data, err := ec.unmarshalNTempUserInput2ᚖgithubᚗcomᚋpawanmkrᚋmockintᚋgraphᚋmodelᚐTempUserInput(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			data, err := ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.User = data
+			it.Name = data
+		case "email":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("email"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Email = data
 		}
 	}
 
@@ -3783,7 +3738,7 @@ func (ec *executionContext) unmarshalInputTempUserInput(ctx context.Context, obj
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"name", "whatsapp", "note"}
+	fieldsInOrder := [...]string{"name", "email"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -3799,24 +3754,15 @@ func (ec *executionContext) unmarshalInputTempUserInput(ctx context.Context, obj
 				return it, err
 			}
 			it.Name = data
-		case "whatsapp":
+		case "email":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("whatsapp"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("email"))
 			data, err := ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.Whatsapp = data
-		case "note":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("note"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Note = data
+			it.Email = data
 		}
 	}
 
@@ -4138,13 +4084,8 @@ func (ec *executionContext) _TempUser(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "whatsapp":
-			out.Values[i] = ec._TempUser_whatsapp(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "note":
-			out.Values[i] = ec._TempUser_note(ctx, field, obj)
+		case "email":
+			out.Values[i] = ec._TempUser_email(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -4648,11 +4589,6 @@ func (ec *executionContext) unmarshalNTempUserInput2ᚕᚖgithubᚗcomᚋpawanmk
 		}
 	}
 	return res, nil
-}
-
-func (ec *executionContext) unmarshalNTempUserInput2ᚖgithubᚗcomᚋpawanmkrᚋmockintᚋgraphᚋmodelᚐTempUserInput(ctx context.Context, v interface{}) (*model.TempUserInput, error) {
-	res, err := ec.unmarshalInputTempUserInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {

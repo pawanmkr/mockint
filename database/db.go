@@ -123,6 +123,7 @@ func (db *DB) GetAllMeetings() []*model.Interview {
 	if err := cursor.All(context.TODO(), &res); err != nil {
 		panic(err)
 	}
+
 	return res
 }
 
@@ -173,28 +174,60 @@ func (db *DB) UpdateMeeting(id string, input model.InterviewInput) *model.Interv
 }
 
 func (db *DB) BookMeeting(input model.BookInterview) *model.Interview {
-	body, _ := json.Marshal(map[string]string{
-		"startDateTime": "2023-10-28T12:00:00+05:30",
-		"endDateTime":   "2023-10-28T13:00:00+05:30",
-		"subject":       "trying to generate a meet link using api",
-	})
-
-	var meeting = services.CreateMeeting(body)
-
 	collection := db.client.Database(db.db).Collection(db.collection)
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	var doc *model.Interview
 
+	// chekcing if the interview is scheduled first or not
 	_id, _ := primitive.ObjectIDFromHex(input.InterviewID)
 	filter := bson.M{"_id": _id}
+
+	err := collection.FindOne(ctx, filter, options.FindOne()).Decode(&doc)
+	logError(err)
+
+	// if the input is already available then return
+	for _, guest := range doc.Guest {
+		if guest.Email == input.Email {
+			return nil
+		}
+	}
+
+	sDnt := doc.Time
+	layout := "2006-01-02T15:04:05.0000000-07:00"
+
+	t, err := time.Parse(layout, sDnt)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return nil
+	}
+
+	newTime := t.Add(time.Duration(doc.Duration) * time.Minute)
+	eDnt := newTime.Format(layout)
+
+	// creating a meeting on teams first, if not created then return
+	body, _ := json.Marshal(map[string]string{
+		"startDateTime": sDnt,
+		"endDateTime":   eDnt,
+		"subject":       "trying to generate a meet link using api",
+	})
+
+	// fmt.Println(sDnt)
+	// fmt.Println(eDnt)
+
+	var meeting *services.Meeting
+	meeting, err = services.CreateMeeting(body)
+	if err != nil {
+		return nil
+	}
+
+	// update fields
 	update := bson.M{
 		"$push": bson.M{
 			"guest": bson.M{
-				"name":     input.User.Name,
-				"whatsapp": input.User.Whatsapp,
-				"note":     input.User.Note,
+				"name":     input.Name,
+				"whatsapp": input.Email,
 			},
 		},
 		"$set": bson.M{
@@ -204,14 +237,8 @@ func (db *DB) BookMeeting(input model.BookInterview) *model.Interview {
 		},
 	}
 
-	err := collection.FindOne(ctx, filter, options.FindOne()).Decode(&doc)
-	logError(err)
+	services.SendMail(input.Email, meeting.JoinUrl)
 
-	for _, guest := range doc.Guest {
-		if guest.Whatsapp == input.User.Whatsapp {
-			return nil
-		}
-	}
 	err = collection.FindOneAndUpdate(ctx, filter, update, options.FindOneAndUpdate().SetReturnDocument(1)).Decode(&doc)
 	logError(err)
 

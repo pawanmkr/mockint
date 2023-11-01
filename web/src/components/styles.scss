@@ -1,0 +1,128 @@
+.navbar {
+  display: flex;
+
+  .nav-item {
+    margin: 0 30px 5px 5px;
+    cursor: pointer;
+  }
+}
+
+.card {
+
+  .compact {
+      display: flex;
+      padding: 5px;
+      border: 1px solid gainsboro;
+      font-size: 16px;
+      background-color: white;  
+      align-items: center;
+    
+      .items {
+        // margin: 0 15px 0 0;
+      }
+    
+      .skills {
+        width: 25%;
+        font-weight: bolder;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    
+      .dnt {
+        width: 14%;
+      }
+    
+      .name {
+        overflow: hidden;
+        width: 20%;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    
+      .duration {
+        width: 6%
+      }
+    
+      .bnk {
+        width: 8%;
+      }
+    
+      .note {
+        overflow: hidden;
+        width: 28%;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+  }
+
+  .detailed {
+    background-color: white;
+
+    form {
+      padding: 10px 0 0 10px;
+      border-top: 0;
+
+      input, button {
+        padding: 5px;
+        margin-right: 10px;
+      }
+
+      #name {
+        width: 25%;
+      }
+      #whatsapp {
+        width: 15%;
+      }
+    }
+
+    .info {
+      padding: 5px 10px 0 10px;
+      border-left: 2px solid gainsboro;
+      border-right: 2px solid gainsboro;
+    }
+  }
+}
+
+.card:hover {
+  cursor: pointer;
+  background-color: gainsboro;
+}
+
+form {
+  padding: 0 10px;
+  background-color: white;
+  margin: 0 0 10px 0;
+  border: 2px solid gainsboro;
+
+  p {
+    font-weight: bolder;
+    font-size: 1.5em;
+    margin: 0;;
+  }
+
+  .container {
+    margin: 5px 0;
+  }
+
+  .input {
+    padding: 5px;
+  }
+
+  .one {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .name {
+    width: 14%;
+  }
+
+  .skills {
+    width: 34%;
+  }
+
+  button {
+    margin: 0 0 10px 0;
+  }
+}

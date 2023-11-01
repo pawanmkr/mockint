@@ -3,8 +3,9 @@
 package model
 
 type BookInterview struct {
-	InterviewID string         `json:"interviewId"`
-	User        *TempUserInput `json:"user"`
+	InterviewID string `json:"interviewId"`
+	Name        string `json:"name"`
+	Email       string `json:"email"`
 }
 
 type DeleteResponse struct {
@@ -41,13 +42,11 @@ type InterviewInput struct {
 }
 
 type TempUser struct {
-	Name     string `json:"name"`
-	Whatsapp string `json:"whatsapp"`
-	Note     string `json:"note"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
 }
 
 type TempUserInput struct {
-	Name     string `json:"name"`
-	Whatsapp string `json:"whatsapp"`
-	Note     string `json:"note"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
 }

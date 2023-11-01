@@ -1,0 +1,28 @@
+.title {
+  font-weight: bolder;
+  padding: 0 5px;
+  display: flex;
+  background-color: white;
+  border: 2px solid gainsboro;
+}
+.title p {
+  margin: 0;
+}
+.title .skills {
+  width: 25%;
+}
+.title .dnt {
+  width: 14%;
+}
+.title .name {
+  width: 20%;
+}
+.title .duration {
+  width: 6%;
+}
+.title .status {
+  width: 8%;
+}
+.title .note {
+  width: 28%;
+}/*# sourceMappingURL=style.css.map */

@@ -23,3 +23,6 @@ go.work
 .DS_Store
 rix.js
 todo
+
+/web/node_modules
+/web/.env

@@ -4,7 +4,9 @@ go 1.21.3
 
 require (
 	github.com/99designs/gqlgen v0.17.39
+	github.com/go-chi/chi v1.5.5
 	github.com/joho/godotenv v1.5.1
+	github.com/rs/cors v1.10.1
 	github.com/vektah/gqlparser/v2 v2.5.10
 	go.mongodb.org/mongo-driver v1.12.1
 )
